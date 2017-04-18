@@ -23,10 +23,14 @@ public:
     Mesh mesh;
     EdgeMesh edgeMesh;
     ShaderProgram phongProgram;
-    Texture diffuseRamp, specularRamp;
+    Texture diffuseList[4];
+    Texture specularList[3];
     ShaderProgram silhouetteProgram;
-
+    int ptr_diffuse;
+    int ptr_specular;
     MyApp() {
+        ptr_diffuse = 0;
+        ptr_specular = 0;
         window = createWindow("4611", 1280, 720);
         camera = OrbitCamera(2.5, 0, 0, Perspective(30, 16/9., 1, 20));
         // Put the light in a nice position in camera space.
@@ -42,12 +46,16 @@ public:
         // Load the diffuse and specular ramps. We set the texture wrap mode
         // to "clamp" to prevent texels from the leftmost column from being
         // blended with those from the rightmost column.
-        diffuseRamp = loadTexture(Config::diffuseRamp);
-        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
-        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
-        specularRamp = loadTexture(Config::specularRamp);
-        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
-        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
+        for (int i = 0; i < 4; i++) {
+          diffuseList[i] = loadTexture(Config::diffuseList[i]);
+          glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
+          glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
+        }
+        for (int i = 0; i < 3; i++) {
+          specularList[i] = loadTexture(Config::specularList[i]);
+          glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
+          glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
+        }
         // Load the vertex and fragment shaders. Since you don't need to
         // recompile the C++ program to reload shaders, you can even do this
         // interactively as you debug your shaders! Press 'R' to reload the
@@ -82,6 +90,16 @@ public:
             lightPosition = camera.getEye();
         if (e.keysym.scancode == SDL_SCANCODE_R)
             reloadShaders();
+        if (e.keysym.scancode == SDL_SCANCODE_D) {
+          //  switch diffuse
+          ptr_diffuse++;
+          ptr_diffuse %= 4;
+        }
+        if (e.keysym.scancode == SDL_SCANCODE_S) {
+          // switch specular
+          ptr_specular++;
+          ptr_specular %= 3;
+        }
     }
 
     void drawGraphics() {
@@ -105,7 +123,7 @@ public:
         phongProgram.setUniform("projectionMatrix", getMatrix(GL_PROJECTION));
         // TODO: Pass the relevant parameters from Config into your shader
         // using uniform variables.
-        
+
         phongProgram.setUniform("Ia", Config::Ia);
         phongProgram.setUniform("Id", Config::Id);
         phongProgram.setUniform("Is", Config::Is);
@@ -113,8 +131,10 @@ public:
         phongProgram.setUniform("kd", Config::kd);
         phongProgram.setUniform("ks", Config::ks);
         phongProgram.setUniform("s", Config::s);
-        phongProgram.setTexture("diffuseRamp", diffuseRamp, 0);
-        phongProgram.setTexture("specularRamp", specularRamp, 1);
+
+        phongProgram.setTexture("diffuseRamp", diffuseList[ptr_diffuse], 0);
+        phongProgram.setTexture("specularRamp", specularList[ptr_specular], 1);
+        
         phongProgram.setUniform("lightInViewSpace", lightInViewSpace);
 
         phongProgram.setAttribute("vertex", mesh.vertexBuffer, 3, GL_FLOAT);
