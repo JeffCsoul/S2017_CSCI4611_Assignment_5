@@ -20,6 +20,19 @@ namespace Config {
     const std::string diffuseRamp = dataDir + "/standardDiffuse.bmp";
     const std::string specularRamp = dataDir + "/standardSpecular.bmp";
 
+    const std::string diffuseList[4] = {
+      dataDir + "/toonDiffuse.bmp",
+      dataDir + "/standardDiffuse.bmp",
+      dataDir + "/goochDiffuse.bmp",
+      dataDir + "/tf2Diffuse.bmp"
+    };
+
+    const std::string specularList[3] = {
+      dataDir + "/toonSpecular.bmp",
+      dataDir + "/standardSpecular.bmp",
+      dataDir + "/iridescentSpecular.bmp"
+    };
+
     // Shader parameters.
     // TODO: Pass them into your shaders using uniform variables.
 

@@ -63,7 +63,7 @@ public:
         phongProgram = ShaderProgram(Config::phongVert, Config::phongFrag);
         silhouetteProgram = ShaderProgram(Config::silhouetteVert, Config::silhouetteFrag);
     }
-    
+
     void run() {
         float fps = 60, dt = 1/fps;
         while (!shouldQuit()) {
@@ -105,6 +105,18 @@ public:
         phongProgram.setUniform("projectionMatrix", getMatrix(GL_PROJECTION));
         // TODO: Pass the relevant parameters from Config into your shader
         // using uniform variables.
+        
+        phongProgram.setUniform("Ia", Config::Ia);
+        phongProgram.setUniform("Id", Config::Id);
+        phongProgram.setUniform("Is", Config::Is);
+        phongProgram.setUniform("ka", Config::ka);
+        phongProgram.setUniform("kd", Config::kd);
+        phongProgram.setUniform("ks", Config::ks);
+        phongProgram.setUniform("s", Config::s);
+        phongProgram.setTexture("diffuseRamp", diffuseRamp, 0);
+        phongProgram.setTexture("specularRamp", specularRamp, 1);
+        phongProgram.setUniform("lightInViewSpace", lightInViewSpace);
+
         phongProgram.setAttribute("vertex", mesh.vertexBuffer, 3, GL_FLOAT);
         phongProgram.setAttribute("normal", mesh.normalBuffer, 3, GL_FLOAT);
         drawElements(GL_TRIANGLES, mesh.indexBuffer, mesh.triangles.size()*3);
