@@ -28,9 +28,11 @@ public:
     ShaderProgram silhouetteProgram;
     int ptr_diffuse;
     int ptr_specular;
+    int border_ctl;
     MyApp() {
         ptr_diffuse = 0;
         ptr_specular = 0;
+        border_ctl = true;
         window = createWindow("4611", 1280, 720);
         camera = OrbitCamera(2.5, 0, 0, Perspective(30, 16/9., 1, 20));
         // Put the light in a nice position in camera space.
@@ -100,6 +102,10 @@ public:
           ptr_specular++;
           ptr_specular %= 3;
         }
+        if (e.keysym.scancode == SDL_SCANCODE_B) {
+          //  switch diffuse
+          border_ctl = !border_ctl;
+        }
     }
 
     void drawGraphics() {
@@ -134,7 +140,7 @@ public:
 
         phongProgram.setTexture("diffuseRamp", diffuseList[ptr_diffuse], 0);
         phongProgram.setTexture("specularRamp", specularList[ptr_specular], 1);
-        
+
         phongProgram.setUniform("lightInViewSpace", lightInViewSpace);
 
         phongProgram.setAttribute("vertex", mesh.vertexBuffer, 3, GL_FLOAT);
@@ -147,7 +153,11 @@ public:
         silhouetteProgram.setUniform("modelViewMatrix", getMatrix(GL_MODELVIEW));
         silhouetteProgram.setUniform("normalMatrix", glm::inverse(glm::transpose(getMatrix(GL_MODELVIEW))));
         silhouetteProgram.setUniform("projectionMatrix", getMatrix(GL_PROJECTION));
-        silhouetteProgram.setUniform("thickness", Config::thickness);
+        if (border_ctl)
+          silhouetteProgram.setUniform("thickness", Config::thickness);
+        else
+          silhouetteProgram.setUniform("thickness", 0.0f);
+
         silhouetteProgram.setAttribute("vertex", edgeMesh.vertexBuffer, 3, GL_FLOAT);
         silhouetteProgram.setAttribute("direction", edgeMesh.directionBuffer, 3, GL_FLOAT);
         silhouetteProgram.setAttribute("leftNormal", edgeMesh.leftNormalBuffer, 3, GL_FLOAT);
