@@ -153,6 +153,8 @@ public:
         silhouetteProgram.setUniform("modelViewMatrix", getMatrix(GL_MODELVIEW));
         silhouetteProgram.setUniform("normalMatrix", glm::inverse(glm::transpose(getMatrix(GL_MODELVIEW))));
         silhouetteProgram.setUniform("projectionMatrix", getMatrix(GL_PROJECTION));
+
+        // set switch for boundary
         if (border_ctl)
           silhouetteProgram.setUniform("thickness", Config::thickness);
         else
