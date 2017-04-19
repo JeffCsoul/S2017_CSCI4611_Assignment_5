@@ -19,3 +19,12 @@ You can find a executive program which is named `ArtisticRendering` in the folde
 
 ## Description
 1. This project is based on OpenGL and GLM libiary.
+2. I applied the parameters mentioned in the handout on the code from demo program used in class to create the Blinn-Phong model.
+3. I used two help-vectors to consider whether the eye and the light at the same side, which is used to determine whether we should display the silhouette.
+
+## Additional Features:
+I bundled two hot keys for switching diffuse and specular, and another hot key for turning on or off silhouette line's display.
+1. Hot key `D`: Switching diffuse applied on the model between four different diffuses. The default one is `toonDiffuse`.
+2. Hot key `S`: Switching specular applied on the model between three different speculars. The default one is `toonSpecular`.
+3. Hot Key `B`: Turning on/off the display of silhouette. The default status is `on`.
+You can use this feature to control and self-design the appearance of the model.
