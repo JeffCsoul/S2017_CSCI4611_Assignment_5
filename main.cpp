@@ -28,10 +28,12 @@ public:
     ShaderProgram silhouetteProgram;
     int ptr_diffuse;
     int ptr_specular;
+    int ptr_model;
     int border_ctl;
     MyApp() {
         ptr_diffuse = 0;
         ptr_specular = 0;
+        ptr_model = 0;
         border_ctl = true;
         window = createWindow("4611", 1280, 720);
         camera = OrbitCamera(2.5, 0, 0, Perspective(30, 16/9., 1, 20));
@@ -41,7 +43,7 @@ public:
         lightPosition = 3.0*glm::normalize(vec3(1,1,1));
         // Load the triangle mesh, and create an EdgeMesh for rendering
         // its silhouette edges.
-        mesh.loadOBJ(Config::mesh);
+        mesh.loadOBJ(Config::meshList[ptr_model]);
         mesh.createGPUData(this);
         edgeMesh.fromMesh(mesh);
         edgeMesh.createGPUData(this);
@@ -101,6 +103,17 @@ public:
           // switch specular
           ptr_specular++;
           ptr_specular %= 3;
+        }
+        if (e.keysym.scancode == SDL_SCANCODE_M) {
+          // switch specular
+          ptr_model++;
+          ptr_model %= 8;
+          mesh = Mesh();
+          edgeMesh = EdgeMesh();
+          mesh.loadOBJ(Config::meshList[ptr_model]);
+          mesh.createGPUData(this);
+          edgeMesh.fromMesh(mesh);
+          edgeMesh.createGPUData(this);
         }
         if (e.keysym.scancode == SDL_SCANCODE_B) {
           //  switch diffuse

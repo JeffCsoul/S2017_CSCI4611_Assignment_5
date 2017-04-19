@@ -20,6 +20,16 @@ namespace Config {
     const std::string diffuseRamp = dataDir + "/standardDiffuse.bmp";
     const std::string specularRamp = dataDir + "/standardSpecular.bmp";
 
+    const std::string meshList[8] = {
+      dataDir + "/cow.obj",
+      dataDir + "/bunny.obj",
+      dataDir + "/bunnyLowres.obj",
+      dataDir + "/chamferedCube.obj",
+      dataDir + "/hippo.obj",
+      dataDir + "/maxplanck.obj",
+      dataDir + "/sphere.obj",
+      dataDir + "/teapot.obj"
+    };
     const std::string diffuseList[4] = {
       dataDir + "/toonDiffuse.bmp",
       dataDir + "/standardDiffuse.bmp",
